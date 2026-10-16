@@ -1,0 +1,70 @@
+<div class="upload-container">
+
+  <div class="header-section">
+    <h2>Manual scan for <span class="highlight">AI fakes</span></h2>
+    <p>Upload a face image to check whether it shows a real person or an AI creation.</p>
+  </div>
+
+  <div class="quota-warning" *ngIf="outOfScans">
+    <div class="warning-icon">🔒</div>
+    <h3>Scan quota used up</h3>
+    <p>You have used all the scans in your plan for this month. Your quota resets automatically every month.</p>
+    <button class="btn-upgrade" routerLink="/dashboard">Go to dashboard</button>
+  </div>
+
+  <div class="upload-card" *ngIf="!outOfScans">
+
+    <div class="drop-zone" [ngClass]="{'has-file': selectedFileUrl}" (click)="!isScanning && fileInput.click()">
+      <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;" [disabled]="isScanning">
+
+      <div class="drop-zone-content" *ngIf="!selectedFileUrl">
+        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+        <h3>Click here or drag an image</h3>
+        <p>Supports high-quality face images (JPG, PNG, WebP)</p>
+        <div class="file-limits">Up to 10MB • JPEG, PNG, WebP</div>
+      </div>
+
+      <div class="image-preview" *ngIf="selectedFileUrl">
+        <img [src]="selectedFileUrl" alt="Preview">
+        <p class="file-name">{{ selectedFile?.name }}</p>
+      </div>
+    </div>
+
+    <button class="btn-scan"
+            [disabled]="!selectedFile || isScanning"
+            (click)="startScan()">
+      {{ isScanning ? 'Contacting the AI server...' : 'Start image analysis' }}
+    </button>
+
+    <div class="scanning-indicator" *ngIf="isScanning">
+      <div class="spinner"></div>
+      <p>Analyzing pixels, lighting patterns and frequencies in parallel...</p>
+    </div>
+
+    <div class="error-message" *ngIf="errorMessage">
+      <p>⚠️ {{ errorMessage }}</p>
+    </div>
+
+    <div class="scan-result" *ngIf="scanComplete && scanResultData">
+
+      <div *ngIf="scanResultData.final_decision.result === 'Real'" class="result-box safe-result">
+        <div class="result-icon safe">✓</div>
+        <h4>Result: Real image</h4>
+        <p>Confidence that the image is authentic: <strong>{{ scanResultData.final_decision.confidence }}%</strong></p>
+      </div>
+
+      <div *ngIf="scanResultData.final_decision.result === 'Fake'" class="result-box danger-result">
+        <div class="result-icon danger">⚠️</div>
+        <h4>Result: Suspected deepfake</h4>
+        <p>Confidence that the image was AI-generated: <strong>{{ scanResultData.final_decision.confidence }}%</strong></p>
+      </div>
+
+      <div class="quota-note-container">
+        <p class="quota-note">
+          You have <strong>{{ maxScans - usedScans }}</strong> scans left this month.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>

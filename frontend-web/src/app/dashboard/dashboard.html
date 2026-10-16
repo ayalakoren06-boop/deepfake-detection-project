@@ -1,0 +1,39 @@
+<div class="dashboard-container">
+
+  <div class="header-section">
+    <h2 *ngIf="currentUser">Hello, <span class="highlight">{{ currentUser.name }}</span>!</h2>
+    <p>Here is your account overview for this month.</p>
+  </div>
+
+  <div class="stats-card">
+    <div class="stats-header">
+      <h3>Monthly scan quota</h3>
+      <span class="plan-badge">{{ isPro ? 'Pro Plan' : 'Basic Plan' }}</span>
+    </div>
+
+    <div class="scan-count">
+      <span class="remaining">{{ remainingScans }}</span>
+      <span class="total"> of {{ maxScans }} scans left</span>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-bar"
+           [style.width.%]="progressPercentage"
+           [ngClass]="{'warning': progressPercentage >= 80, 'danger': progressPercentage >= 100}">
+      </div>
+    </div>
+
+    <p class="progress-text" *ngIf="progressPercentage < 100">
+      You have used <strong>{{ usedScans }}</strong> scans so far.
+    </p>
+    <p class="progress-text alert-text" *ngIf="progressPercentage >= 100">
+      You have used all your scans for this month. The extension will not perform any more scans until your quota resets.
+    </p>
+
+    <div class="action-buttons">
+      <button class="btn-upgrade" (click)="upgradePlan()" *ngIf="!isPro">Upgrade to Pro</button>
+      <button class="btn-scan" routerLink="/upload" *ngIf="remainingScans > 0">Manual scan</button>
+    </div>
+  </div>
+
+</div>

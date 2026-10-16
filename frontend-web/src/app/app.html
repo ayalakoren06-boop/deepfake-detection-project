@@ -1,0 +1,51 @@
+<div class="app-container">
+
+  <header class="navbar">
+    <div class="logo">Web<span class="highlight">DeepFence</span></div>
+
+    <nav class="nav-links" *ngIf="isLoggedIn">
+      <a routerLink="/home" routerLinkActive="active-link">About</a>
+      <a routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
+      <a routerLink="/upload" routerLinkActive="active-link">Scan Image</a>
+      <a routerLink="/download" routerLinkActive="active-link">Extension Guide</a>
+      <a routerLink="/payment" routerLinkActive="active-link">Buy Plans</a>
+    </nav>
+
+    <div class="user-actions">
+      <button *ngIf="isLoggedIn" (click)="logout()" class="btn-logout">Log out</button>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <div *ngIf="!isLoggedIn" class="hero-section">
+
+      <div class="hero-content">
+        <div class="badge">Smart Browser Extension</div>
+
+        <h1>Advanced detection of face forgeries powered by <br><span class="highlight">Artificial Intelligence</span></h1>
+
+        <p class="description">
+          Using smart image analysis and advanced algorithms, the extension lets you verify the authenticity of face images directly from your browser.
+        </p>
+
+        <div class="login-area">
+          <p class="login-title">Sign in to manage your account and download the extension:</p>
+          <div class="login-wrapper">
+            <div id="googleBtn"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-image-container">
+        <img src="/38276762-a7ad-4b3e-a1bf-104a42d319fc (2).png" alt="AI vs Human Face Detection" class="hero-image">
+      </div>
+
+    </div>
+
+    <div *ngIf="isLoggedIn" class="router-container">
+      <router-outlet></router-outlet>
+    </div>
+
+  </main>
+</div>
